@@ -1,7 +1,7 @@
 import express from "express";
 // IMPORT EXPRESS SERVER
 import mongoose from "mongoose";
-import cors from "cors";
+// import cors from "cors";
 // IMPORT CORS
 
 import listEndpoints from "express-list-endpoints";
@@ -10,8 +10,8 @@ import listEndpoints from "express-list-endpoints";
 // BASIC SERVER CREATION
 // REMEMBER TO UPDATE START SCRIPT IN PACKAGE JSON
 
-import authorsRouter from "./authors/index.js";
-import blogsRouter from "./blog-posts/index.js";
+import authorsRouter from "./services/index.js";
+import blogsRouter from "./services/blog-index.js";
 // import authorByBlogs from "./blog-posts/index-author.js"
 // TELL THE SERVER ABOUT THE ROUTES
 
@@ -23,9 +23,9 @@ import {
 } from "./errorHandlers.js";
 
 const server = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-server.use(cors());
+// server.use(cors());
 server.use(express.json());
 
 server.use("/authors", authorsRouter);
