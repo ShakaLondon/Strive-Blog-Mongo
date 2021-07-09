@@ -1,13 +1,13 @@
 import express from "express"
 import createError from "http-errors"
 
-import AuthorModel from "./schema.js"
+import BlogModel from "./blog-schema.js"
 
-const authorRouter = express.Router()
+const blogsRouter = express.Router()
 
-authorRouter.post("/", async (req, res, next) => {
+blogsRouter.post("/", async (req, res, next) => {
   try {
-    const newAuthor = new AuthorModel(req.body)
+    const newAuthor = new BlogModel(req.body)
     const { _id } = await newAuthor.save()
 
     res.status(201).send({ _id })
@@ -22,31 +22,31 @@ authorRouter.post("/", async (req, res, next) => {
 
       console.log(error)
 
-      next(createError(500, "An error occurred while creating new blog"))
+      next(createError(500, "An error occurred while creating new author"))
     }
   }
 })
 
-authorRouter.get("/", async (req, res, next) => {
+blogsRouter.get("/", async (req, res, next) => {
   try {
 
-    const authors = await AuthorModel.find()
+    const users = await BlogModel.find()
 
-    res.send(authors)
+    res.send(users)
 
   } catch (error) {
 
-    next(createError(500, "An error occurred while getting authors' list "))
+    next(createError(500, "An error occurred while getting users' list "))
 
   }
 })
 
-authorRouter.get("/:authorId", async (req, res, next) => {
+blogsRouter.get("/:authorId", async (req, res, next) => {
   try {
 
     const authorId = req.params.authorId
 
-    const author = await AuthorModel.findById(authorId)
+    const author = await BlogModel.findById(authorId)
 
     if (author) {
       res.send(author)
@@ -58,11 +58,11 @@ authorRouter.get("/:authorId", async (req, res, next) => {
   }
 })
 
-authorRouter.delete("/:authorId", async (req, res, next) => {
+blogsRouter.delete("/:authorId", async (req, res, next) => {
   try {
     const authorId = req.params.authorId
 
-    const deletedAuthor = await AuthorModel.findByIdAndDelete(authorId)
+    const deletedAuthor = await BlogModel.findByIdAndDelete(authorId)
 
     if (deletedAuthor) {
       res.status(204).send()
@@ -74,11 +74,11 @@ authorRouter.delete("/:authorId", async (req, res, next) => {
   }
 })
 
-authorRouter.put("/:authorId", async (req, res, next) => {
+blogsRouter.put("/:authorId", async (req, res, next) => {
   try {
     const authorId = req.params.authorId
 
-    const updatedAuthor = await AuthorModel.findByIdAndUpdate(authorId, req.body, {
+    const updatedAuthor = await BlogModel.findByIdAndUpdate(authorId, req.body, {
       new: true,
       runValidators: true,
     })
@@ -93,4 +93,4 @@ authorRouter.put("/:authorId", async (req, res, next) => {
   }
 })
 
-export default authorRouter
+export default blogsRouter

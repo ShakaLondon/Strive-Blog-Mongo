@@ -1,7 +1,7 @@
 import express from "express";
 // IMPORT EXPRESS SERVER
 import mongoose from "mongoose";
-// import cors from "cors";
+import cors from "cors";
 // IMPORT CORS
 
 import listEndpoints from "express-list-endpoints";
@@ -10,10 +10,12 @@ import listEndpoints from "express-list-endpoints";
 // BASIC SERVER CREATION
 // REMEMBER TO UPDATE START SCRIPT IN PACKAGE JSON
 
-import authorsRouter from "./services/index.js";
-import blogsRouter from "./services/blog-index.js";
+import authorsRouter from "./services/authors/index.js";
+import blogsRouter from "./services/blogs/blog-index.js";
 // import authorByBlogs from "./blog-posts/index-author.js"
 // TELL THE SERVER ABOUT THE ROUTES
+
+// import AuthorModel from "./services/authors/schema.js"
 
 // MIDDLEWARE ERROR HANDLERS
 import {
@@ -25,7 +27,21 @@ import {
 const server = express();
 const PORT = process.env.PORT || 3000;
 
-// server.use(cors());
+// const whiteList = ["http://localhost:3000"];
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     if (whiteList.some((allowedUrl) => allowedUrl === origin)) {
+//       callback(null, true);
+//     } else {
+//       const error = new Error("Not allowed by cors!");
+//       error.status = 403;
+
+//       callback(error);
+//     }
+//   },
+// };
+// server.use(cors(corsOptions));
+server.use(cors());
 server.use(express.json());
 
 server.use("/authors", authorsRouter);
@@ -43,20 +59,22 @@ server.use(catchAllErrorHandler);
 console.table(listEndpoints(server));
 // console.log(listEndpoints(server)) TO SHOW AS A LIST
 
-mongoose
-  .connect(process.env.MONGO_CONNECTION, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: true,
-  })
-  .then(() => {
-      console.log('connected to db')
-    server.listen(PORT, () => console.log("server is running on port:", PORT));
+server.listen(PORT, async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_CONNECTION, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`✅ Server is running on ${PORT}  and connected to db`);
+  } catch (error) {
+    console.log("Db connection is failed ", error);
+  }
+});
 
-    server.on("error", (error) =>
-      console.log(`server is not running due to: ${error}`)
-    );
-  }).catch(e=>console.log(e))
+server.on("error", (error) =>
+  console.log(`❌ Server is not running due to : ${error}`)
+);
+
 
 // FOR SERVER ALREADY IN USE ERROR RUN
 // lsof -i:3000

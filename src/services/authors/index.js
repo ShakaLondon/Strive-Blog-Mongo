@@ -1,12 +1,14 @@
 import express from "express"
 import createError from "http-errors"
 
-import AuthorModel from "./blog-schema.js"
+import AuthorModel from "./schema.js"
+// import addAuthor from "./insert.js"
 
-const authorsRouter = express.Router()
+const authorRouter = express.Router()
 
-authorsRouter.post("/", async (req, res, next) => {
+authorRouter.post("/", async (req, res, next) => {
   try {
+
     const newAuthor = new AuthorModel(req.body)
     const { _id } = await newAuthor.save()
 
@@ -22,26 +24,26 @@ authorsRouter.post("/", async (req, res, next) => {
 
       console.log(error)
 
-      next(createError(500, "An error occurred while creating new author"))
+      next(createError(500, "An error occurred while creating new blog"))
     }
   }
 })
 
-authorsRouter.get("/", async (req, res, next) => {
+authorRouter.get("/", async (req, res, next) => {
   try {
 
-    const users = await AuthorModel.find()
+    const authors = await AuthorModel.find()
 
-    res.send(users)
+    res.send(authors)
 
   } catch (error) {
 
-    next(createError(500, "An error occurred while getting users' list "))
+    next(createError(500, "An error occurred while getting authors' list "))
 
   }
 })
 
-authorsRouter.get("/:authorId", async (req, res, next) => {
+authorRouter.get("/:authorId", async (req, res, next) => {
   try {
 
     const authorId = req.params.authorId
@@ -58,7 +60,7 @@ authorsRouter.get("/:authorId", async (req, res, next) => {
   }
 })
 
-authorsRouter.delete("/:authorId", async (req, res, next) => {
+authorRouter.delete("/:authorId", async (req, res, next) => {
   try {
     const authorId = req.params.authorId
 
@@ -74,7 +76,7 @@ authorsRouter.delete("/:authorId", async (req, res, next) => {
   }
 })
 
-authorsRouter.put("/:authorId", async (req, res, next) => {
+authorRouter.put("/:authorId", async (req, res, next) => {
   try {
     const authorId = req.params.authorId
 
@@ -93,4 +95,4 @@ authorsRouter.put("/:authorId", async (req, res, next) => {
   }
 })
 
-export default authorsRouter
+export default authorRouter

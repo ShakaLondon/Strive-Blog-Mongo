@@ -1,9 +1,8 @@
 import mongoose from "mongoose"
-import { number } from "prop-types"
 
 const { Schema, model } = mongoose
 
-const UserSchema = new Schema(
+const BlogSchema = new Schema(
   {
     category: {
       type: String,
@@ -48,4 +47,4 @@ const UserSchema = new Schema(
   }
 )
 
-export default model("User", UserSchema) // bounded to "users" collection
+export default model("Blogs", BlogSchema) // bounded to "users" collection
