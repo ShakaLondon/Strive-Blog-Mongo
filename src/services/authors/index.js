@@ -81,7 +81,7 @@ authorRouter.put("/:authorId", async (req, res, next) => {
     const authorId = req.params.authorId
 
     const updatedAuthor = await AuthorModel.findByIdAndUpdate(authorId, req.body, {
-      new: true,
+      new: true, // to use existing record n
       runValidators: true,
     })
 

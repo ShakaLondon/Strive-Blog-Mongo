@@ -27,16 +27,10 @@ const BlogSchema = new Schema(
           default: "minute",
       },
     },
-    author: {
-      name: {
-        type: String,
-        required: true,
-      },
-      avatar: {
-        type: String,
-        required: true,
-      }
-    },
+    author: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Author'
+    }],
     content:{
         type: String,
         required: true,
