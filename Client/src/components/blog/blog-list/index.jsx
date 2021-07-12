@@ -27,9 +27,9 @@ export default class BlogList extends Component {
         // this is happening AFTER the initial render invocation
         let newPosts = await response.json()
         // .json() is a method in charge of converting your response body into something usable in JS
-        console.log('POSTS', newPosts)
+        console.log('POSTS', newPosts.blogs)
         this.setState({
-            blogs: newPosts,
+            blogs: newPosts.blogs,
             isLoading: false
         })
     } catch (error) {
@@ -56,7 +56,7 @@ export default class BlogList extends Component {
             :
                     
                 this.state.blogs.map((post) => (
-          <Col md={4} key={post.id} style={{ marginBottom: 50 }}>
+          <Col md={4} key={post._id} style={{ marginBottom: 50 }}>
             <BlogItem  key={i++} {...post} />
           </Col>
         ))}

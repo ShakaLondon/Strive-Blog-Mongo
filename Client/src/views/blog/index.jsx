@@ -3,14 +3,15 @@ import { Container, Image } from "react-bootstrap";
 import { withRouter } from "react-router";
 import Loading from './Loading'
 import Error from './Error'
-import PostAuthor from "../../components/blog/blog-author";
+import PostAuthor from "../../components/blog/blog-author/index.jsx";
 
 import "./styles.css";
 class BlogPage extends Component {
   state = {
     blog: {},
     isLoading: true,
-    isError: false
+    isError: false,
+    author: []
   };
   // componentDidMount() {
   //   const { id } = this.props.match.params;
@@ -28,24 +29,26 @@ class BlogPage extends Component {
     // this will be fired just ONCE, when the component is placed into the DOM
     // and it has finished the mounting process
     // after the INITIAL RENDER of the component
-    const { id } = this.props.match.params;
+    const { id }  = this.props.match.params;
+    
+    
     console.log(this.props.match.params)
     console.log('COMPONENTDIDMOUNT')
     // componentDidMount is the PERFECT PLACE for our fetch
     // so here we're going to put our fetch()
     try {
-        
-        
         let response = await fetch(`http://localhost:3000/blogs/${id}`)
         console.log(response)
         // this is happening AFTER the initial render invocation
-        let newPosts = await response.json()
+        let newBlog = await response.json()
         // .json() is a method in charge of converting your response body into something usable in JS
-        console.log('POSTS', newPosts)
+        console.log('blog', newBlog)
         this.setState({
-            blog: newPosts,
-            isLoading: false
+            blog: newBlog,
+            isLoading: false,
+            author: newBlog.author
         })
+        
     } catch (error) {
         console.log(error)
         this.setState({ isLoading: false, isError: true })
@@ -53,10 +56,24 @@ class BlogPage extends Component {
 }
 
   render() {
-    console.log(this.state.blog)
-    const readTimeVal = {...this.state.blog.readTime}
+    // console.log(this.state.blog)
+    // const readTimeVal = {...this.props.blog.readTime}
 
-    console.log(readTimeVal)
+    // console.log(readTimeVal)
+
+    // console.log(this.props.match.params)
+    console.log(...this.state.author)
+
+    const authorDet = {...this.state.author}
+
+    console.log(authorDet)
+
+
+    // const authorObj = this.state.author
+    // console.log(authorObj)
+    // const authorDet = authorObj[0]
+    // console.log(authorDet)
+   
     
     if ( this.state.isLoading && this.state.isError ) {
       return (
@@ -65,6 +82,12 @@ class BlogPage extends Component {
         {this.state.isError && <Error />}
       </div>);
     } else {
+
+    // const authorObj = this.state.author
+    // console.log(...authorObj)
+    // const authorDet = authorObj[0]
+    // console.log(authorDet)
+  
       return (
         <div className="blog-details-root">
           <Container>
@@ -73,11 +96,11 @@ class BlogPage extends Component {
 
             <div className="blog-details-container">
               <div className="blog-details-author">
-                <PostAuthor {...this.state.blog.author} />
+                <PostAuthor author={this.state.author} />
               </div>
               <div className="blog-details-info">
                 <div>{this.state.blog.createdAt}</div>
-                <div>{readTimeVal.value} {readTimeVal.unit} read</div>
+                {/* <div>{this.state.blog.readTimeVal.value} {this.state.blog.readTimeVal.unit} read</div> */}
               </div>
             </div>
 

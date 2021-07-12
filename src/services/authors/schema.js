@@ -31,3 +31,6 @@ const AuthorSchema = new Schema(
 )
 
 export default model("Authors", AuthorSchema) // bounded to "users" collection
+
+// seperate crud for embeded values check purchase history in riccardos code
+
