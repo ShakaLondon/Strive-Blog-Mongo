@@ -3,6 +3,7 @@ import { Container, Navbar, Button, Form, FormControl } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import SearchBar from "./searchBar.jsx";
+import SearchList from "../components/blog/blog-list";
 import "./styles.css";
 export default class NavBar extends Component {
 
@@ -15,7 +16,6 @@ constructor(props) {
 
   this.handleBoxToggle= this.handleBoxToggle.bind(this)
 }
-
 
 handleBoxToggle = () => this.setState({ showSearch: !this.state.showSearch });
 
@@ -80,6 +80,7 @@ handleBoxToggle = () => this.setState({ showSearch: !this.state.showSearch });
         </Container>
         <Container className="flex-row mt-2">
         <SearchBar showSearch={this.state.showSearch} handleBoxToggle={this.handleBoxToggle}></SearchBar>
+        {this.renderBlogs}
         </Container>
       </Navbar>
     );

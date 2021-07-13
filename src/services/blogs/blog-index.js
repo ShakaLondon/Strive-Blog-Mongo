@@ -61,6 +61,58 @@ blogsRouter.get("/:blogId", async (req, res, next) => {
   }
 })
 
+blogsRouter.post("/search", async (req, res, next) => {
+  try {
+
+    const searchInput  = req.query.searchQuery
+
+    console.log(searchInput)
+
+    const searchQ = searchInput.replace(/_/g, ' ')
+
+    console.log(searchQ)
+
+    // var stream = collection.find({"FirstName": new RegExp(val)}).stream();
+
+    // let query = [
+    //   {"title": {$regex: new RegExp(searchQ)}},
+    //   {"category": {$regex: new RegExp(searchQ)}},
+    //   {"content": {$regex: new RegExp(searchQ)}},
+    //   {"author": {"name": { $regex: new RegExp(searchQ)},
+    //             "surname": { $regex: new RegExp(searchQ)}} }
+    //   ]
+
+    // const searchResult = await BlogModel.find(
+    //   { $or: query }, function(err, result) {
+    //     if (err) {
+    //       res.send(err);
+    //     } else {
+    //       res.send(result);
+    //     }
+      // title: $SearchQ,
+      // category: 'Commander',
+      // content: '',
+      // authors : { name: "reservations@marriott.com",
+      //             surname: "" }
+      
+      const searchResult = await BlogModel.find(
+        { $or: [{title: new RegExp(searchQ)}, {category: new RegExp(searchQ)}, {content: new RegExp(searchQ)}, {"author.name": new RegExp(searchQ)}, {"author.surname": new RegExp(searchQ)}]}, 
+        function(err, result) {
+          if (err) {
+            res.send(err);
+          }
+          })
+
+    if (searchResult) {
+      res.send(searchResult)
+    } else {
+      next(createError(404, `Query: No results found for ${req.query.searchQuery}!`))
+    }
+  } catch (error) {
+    next(createError(500, "An error occurred while getting blog"))
+  }
+})
+
 blogsRouter.delete("/:blogId", async (req, res, next) => {
   try {
     const blogId = req.params.blogId
@@ -81,7 +133,7 @@ blogsRouter.put("/:blogId", async (req, res, next) => {
   try {
     const blogId = req.params.blogId
 
-    const updatedAuthor = await BookModel.findByIdAndUpdate(blogId, req.body, {
+    const updatedAuthor = await BlogModel.findByIdAndUpdate(blogId, req.body, {
       new: true,
       runValidators: true,
     })
