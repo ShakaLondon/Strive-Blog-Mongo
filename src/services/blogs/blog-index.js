@@ -3,6 +3,7 @@ import createError from "http-errors"
 import q2m from "query-to-mongo"
 
 import BlogModel from "./blog-schema.js"
+import AuthorModel from "../authors/schema.js"
 
 const blogsRouter = express.Router()
 
@@ -102,6 +103,12 @@ blogsRouter.post("/search", async (req, res, next) => {
             res.send(err);
           }
           })
+
+      // const authorSearch = await AuthorModel.find({ $or: [{name: new RegExp(searchQ)}, {surname: new RegExp(searchQ)}]},
+      // function(err, result) {
+      //   if (err) {
+      //     res.send(err);
+      //   }})
 
     if (searchResult) {
       res.send(searchResult)

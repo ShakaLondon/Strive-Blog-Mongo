@@ -20,23 +20,22 @@ export default class BlogListSearch extends Component {
     console.log('COMPONENTDIDMOUNT')
     // componentDidMount is the PERFECT PLACE for our fetch
     // so here we're going to put our fetch()
-    try {
+    // try {
         
         
-        let response = await fetch('http://localhost:3000/blogs')
-        console.log(response)
-        // this is happening AFTER the initial render invocation
-        let newPosts = await response.json()
-        // .json() is a method in charge of converting your response body into something usable in JS
-        console.log('POSTS', newPosts)
+    //     let response = await fetch('http://localhost:3000/blogs')
+    //     console.log(response)
+    //     // this is happening AFTER the initial render invocation
+    //     let newPosts = await response.json()
+    //     // .json() is a method in charge of converting your response body into something usable in JS
+    //     console.log('POSTS', newPosts)
         this.setState({
-            blogs: newPosts,
             isLoading: false
         })
-    } catch (error) {
-        console.log(error)
-        this.setState({ isLoading: false, isError: true })
-    }
+    // } catch (error) {
+    //     console.log(error)
+    //     this.setState({ isLoading: false, isError: true })
+    // }
 }
   render() {
 
@@ -48,16 +47,16 @@ export default class BlogListSearch extends Component {
         {this.state.isError && <Error />}
         {(
           
-              this.state.blogs.length === 0
-              && this.state.isLoading === false
-              && this.state.isError === false
+              this.props.blogs.length === 0
+              && this.props.isLoading === false
+              && this.props.isError === false
 
           ) ? <p>NO POSTS TO SHOW</p>
 
             :
                     
-                this.state.blogs.map((post) => (
-          <Col md={4} key={post.id} style={{ marginBottom: 50 }}>
+                this.props.blogs.map((post) => (
+          <Col md={4} key={post.id} style={{ marginBottom: 50, marginTop: 50 }}>
             <BlogItem  key={i++} {...post} />
           </Col>
         ))}

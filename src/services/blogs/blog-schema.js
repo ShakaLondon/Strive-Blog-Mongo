@@ -47,6 +47,11 @@ BlogSchema.static("findBlogWithAuthors", async function (id) {
   return blog
 })
 
+// BlogSchema.static("findBlogWithAuthorsSearch", async function (id) {
+//   const blog = await this.findById(id).populate("author")
+//   return blog
+// })
+
 BlogSchema.static("findBlogsWithAuthors", async function (query) {
   const total = await this.countDocuments(query.criteria)
   const blogs = await this.find(query.criteria, query.options.fields)
@@ -56,6 +61,17 @@ BlogSchema.static("findBlogsWithAuthors", async function (query) {
     .populate("author")
 
   return { total, blogs }
+})
+
+BlogSchema.static("findBlogWithAuthorsSearch", async function (query) {
+  // const total = await this.countDocuments(query.criteria)
+  const blogs = await this.find(query.criteria, query.options.fields)
+    // .skip(query.options.skip)
+    // .limit(query.options.limit)
+    // .sort(query.options.sort)
+    .populate("author")
+
+  return blogs
 })
 
 BlogSchema.post("validate", function (error, doc, next) {
