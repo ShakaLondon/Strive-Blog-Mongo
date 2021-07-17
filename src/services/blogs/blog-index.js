@@ -1,6 +1,7 @@
 import express from "express"
 import createError from "http-errors"
 import q2m from "query-to-mongo"
+import { writeUsersPicture } from "../../lib/fs-tools.js"
 
 import BlogModel from "./blog-schema.js"
 import AuthorModel from "../authors/schema.js"
@@ -62,6 +63,26 @@ blogsRouter.get("/:blogId", async (req, res, next) => {
   }
 })
 
+// blogsRouter.post("/:blogId/uploadCover", multer({
+//   fileFilter: (req, file, multerNext) => {
+//     if (file.mimetype !== "image/gif") {
+//       return multerNext(createError(400, "Only GIF allowed!"))
+//     } else {
+//       return multerNext(null, true)
+//     }
+//   },
+// }).single("avatar"),
+// async (req, res, next) => {
+//   try {
+//     console.log(req.file)
+
+//     await writeUsersPicture(req.file.originalname, req.file.buffer)
+//     res.send("Cover uploaded!")
+//   } catch (error) {
+//     next(error)
+//   }
+// })
+
 blogsRouter.post("/search", async (req, res, next) => {
   try {
 
@@ -110,6 +131,8 @@ blogsRouter.post("/search", async (req, res, next) => {
       //     res.send(err);
       //   }})
 
+      console.log(searchResult)
+
     if (searchResult) {
       res.send(searchResult)
     } else {
@@ -140,14 +163,14 @@ blogsRouter.put("/:blogId", async (req, res, next) => {
   try {
     const blogId = req.params.blogId
 
-    const updatedAuthor = await BlogModel.findByIdAndUpdate(blogId, req.body, {
+    const updatedBlog = await BlogModel.findByIdAndUpdate(blogId, req.body, {
       new: true,
       runValidators: true,
     })
 
 
-    if (updatedAuthor) {
-      res.send(updatedAuthor)
+    if (updatedBlog) {
+      res.send(updatedBlog)
     } else {
       next(createError(404, `Blog with _id ${blogId} not found!`))
     }

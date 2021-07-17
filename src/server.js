@@ -2,6 +2,9 @@ import express from "express";
 // IMPORT EXPRESS SERVER
 import mongoose from "mongoose";
 import cors from "cors";
+import fs from "fs"
+import path from "path"
+import bodyParser from "body-parser"
 // IMPORT CORS
 
 import listEndpoints from "express-list-endpoints";
@@ -12,6 +15,9 @@ import listEndpoints from "express-list-endpoints";
 
 import authorsRouter from "./services/authors/index.js";
 import blogsRouter from "./services/blogs/blog-index.js";
+import filesRouter from "./services/uploads/index.js"
+import { getCurrentFolderPath } from "./lib/fs-tools.js"
+import { join } from "path"
 // import authorByBlogs from "./blog-posts/index-author.js"
 // TELL THE SERVER ABOUT THE ROUTES
 
@@ -23,6 +29,8 @@ import {
   entryForbiddenMiddleware,
   notFoundMiddleware,
 } from "./errorHandlers.js";
+
+const publicFolderPath = join(getCurrentFolderPath(import.meta.url), "../public")
 
 const server = express();
 const PORT = process.env.PORT || 3000;
@@ -41,11 +49,15 @@ const PORT = process.env.PORT || 3000;
 //   },
 // };
 // server.use(cors(corsOptions));
+server.use(express.static(publicFolderPath))
 server.use(cors());
 server.use(express.json());
+server.use(bodyParser.urlencoded({ extended: false }))
+server.use(bodyParser.json())
 
 server.use("/authors", authorsRouter);
 server.use("/blogs", blogsRouter);
+server.use("/blogs", filesRouter);
 // server.use("/authors/:id/blogs", authorByBlogs),
 
 // TELL SERVER YOU WANT TO USE THIS

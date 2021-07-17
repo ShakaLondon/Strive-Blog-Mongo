@@ -3,6 +3,7 @@ import createError from "http-errors"
 import q2m from "query-to-mongo"
 
 import AuthorModel from "./schema.js"
+import BlogModel from "../blogs/blog-schema.js"
 // import addAuthor from "./insert.js"
 
 const authorRouter = express.Router()
@@ -93,6 +94,35 @@ authorRouter.put("/:authorId", async (req, res, next) => {
     }
   } catch (error) {
     next(createError(500, `An error occurred while updating author ${req.params.authorId}`))
+  }
+})
+
+authorRouter.get("/:authorId/blogs/", async (req, res, next) => {
+  try {
+
+    const authorId = req.params.authorId
+
+    console.log(authorId)
+
+    const authorSearch = String(authorId)
+
+    console.log(authorSearch)
+
+    const blogsByAuthor = await BlogModel.find({ author: { $in: authorSearch }}, 
+    function(err, result) {
+      if (err) {
+        res.send(err);
+      }
+      })
+
+    if (blogsByAuthor) {
+      console.log(blogsByAuthor)
+      res.send(blogsByAuthor)
+    } else {
+      next(createError(404, `Author with _id ${authorId} not found!`))
+    }
+  } catch (error) {
+    next(createError(500, "An error occurred while getting author"))
   }
 })
 

@@ -3,6 +3,7 @@ import "react-quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import { Container, Form, Button } from "react-bootstrap";
 import "./styles.css";
+import FilesUploadComponent from "./index-upload.jsx"
 export default class NewBlogPost extends Component {
 
   
@@ -132,7 +133,7 @@ export default class NewBlogPost extends Component {
   render() {
     return (
       <Container className="new-blog-container">
-        <Form className="mt-5">
+        <Form className="mt-3">
           <Form.Group controlId="blog-form" className="mt-3">
             <Form.Label>Title</Form.Label>
             <Form.Control size="lg" placeholder="Enter the title of your blog here..." type="text" value={this.state.blogPost.title} name="title" onChange={e => this.handleChange(e)}/>
@@ -155,6 +156,7 @@ export default class NewBlogPost extends Component {
               className="new-blog-content"
             />
           </Form.Group>
+          <FilesUploadComponent/>
           <Form.Group className="d-flex mt-3 justify-content-end">
             <Button type="reset" size="lg" variant="outline-dark">
               Reset
@@ -169,6 +171,7 @@ export default class NewBlogPost extends Component {
               Submit
             </Button>
           </Form.Group>
+          
         </Form>
       </Container>
     );
